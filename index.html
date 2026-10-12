@@ -1,0 +1,416 @@
+<title>일체형 자동 배수 수조</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap">
+<style>
+/* 레이아웃: 왼쪽에 큰 수조 그림, 오른쪽에 지금 일어나는 일(설명·물의 양·힘), 아래에 부품 이름표 */
+:root{
+  --bg:#EEF3F9; --surface:#FFFFFF; --ink:#14213D; --muted:#52627A; --line:#CBD6E4;
+  --wall:#3E4C66; --water:#3FA9F5; --duck:#FFC83D; --plug:#8A4B2A; --rodP:#1FA37A; --rodD:#7B5CFF;
+  --lever:#FF8A3D; --stop:#2A62C9; --spring:#E5407B; --turb:#18B5A3; --fixed:#8794AA;
+  --accent:#2A62C9; --good:#1C9A62; --warn:#D9631E; --chip:#E3EAF4;
+  --f-disp:"Jua","Gowun Dodum","Malgun Gothic",sans-serif;
+  --f-body:"Gowun Dodum","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1626; --surface:#16233B; --ink:#EAF0FA; --muted:#A5B4CC; --line:#2B3C5A;
+    --wall:#9DB0D0; --water:#4DB8FF; --duck:#FFD25E; --plug:#C0764A; --rodP:#3FD1A0; --rodD:#A28DFF;
+    --lever:#FF9F5E; --stop:#6C9CFF; --spring:#FF6B9E; --turb:#3DD6C3; --fixed:#7384A0;
+    --accent:#6C9CFF; --good:#3FD1A0; --warn:#FF9F5E; --chip:#22324E; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1626; --surface:#16233B; --ink:#EAF0FA; --muted:#A5B4CC; --line:#2B3C5A;
+  --wall:#9DB0D0; --water:#4DB8FF; --duck:#FFD25E; --plug:#C0764A; --rodP:#3FD1A0; --rodD:#A28DFF;
+  --lever:#FF9F5E; --stop:#6C9CFF; --spring:#FF6B9E; --turb:#3DD6C3; --fixed:#7384A0;
+  --accent:#6C9CFF; --good:#3FD1A0; --warn:#FF9F5E; --chip:#22324E; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;
+  padding-inline:16px;padding-block:20px 36px}
+.wrap{max-width:1180px;margin-inline:auto;display:flex;flex-direction:column;gap:18px}
+h1{font-family:var(--f-disp);font-weight:400;font-size:clamp(26px,4vw,38px);line-height:1.2;margin:0;text-wrap:balance}
+.sub{margin:6px 0 0;color:var(--muted);font-size:18px}
+h2{font-family:var(--f-disp);font-weight:400;font-size:24px;margin:0 0 10px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+button{font:inherit;font-family:var(--f-disp);font-size:18px;border:2px solid var(--line);background:var(--surface);
+  color:var(--ink);border-radius:12px;padding:8px 16px;cursor:pointer;min-height:44px}
+button:hover{border-color:var(--accent)}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button.main{background:var(--accent);border-color:var(--accent);color:#fff}
+button[aria-pressed="true"]{border-color:var(--accent);background:var(--chip)}
+.sp{display:flex;gap:6px;align-items:center;color:var(--muted)}
+.stage{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:900px){.stage{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px}
+.svgwrap{overflow-x:auto}
+#sim{display:block;width:100%;min-width:560px;height:auto}
+.note{margin:8px 2px 0;color:var(--muted);font-size:15px}
+.side{display:flex;flex-direction:column;gap:14px;min-width:0}
+.cap{font-family:var(--f-disp);font-size:clamp(21px,2.4vw,27px);line-height:1.4;min-height:5.6em;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+.chips li{display:flex;align-items:center;gap:6px;padding:5px 12px 5px 6px;border-radius:999px;background:var(--chip);
+  color:var(--muted);font-size:15px}
+.chips li b{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--surface);
+  font-family:var(--f-disp);font-weight:400;color:var(--muted)}
+.chips li.on{background:var(--accent);color:#fff}
+.chips li.on b{background:#fff;color:var(--accent)}
+.chips li.done b{background:var(--good);color:#fff}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.stat{background:var(--chip);border-radius:12px;padding:10px 12px;min-width:0}
+.stat small{display:block;color:var(--muted);font-size:14px}
+.big{font-family:var(--f-disp);font-size:34px;line-height:1.1;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;font-family:var(--f-disp);font-size:24px;padding:2px 14px;border-radius:999px;color:#fff;background:var(--plug)}
+.pill.open{background:var(--good)}
+.gauge{grid-column:1/-1}
+.track{height:16px;border-radius:999px;background:var(--surface);border:1px solid var(--line);overflow:hidden;margin-top:6px}
+.fill{height:100%;width:0;background:var(--warn)}
+.parts{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin:0;padding:0;list-style:none}
+.parts li{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+.parts .bd{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;font-family:var(--f-disp);color:#14213D;font-size:18px}
+.parts strong{font-family:var(--f-disp);font-weight:400;font-size:19px}
+.parts p{margin:2px 0 0;font-size:15.5px;color:var(--muted)}
+.why{background:var(--chip);border-radius:14px;padding:14px 16px}
+.why p{margin:0}
+/* 그림 안의 색 */
+.f-fixed{fill:var(--fixed)} .s-fixed{stroke:var(--fixed)}
+.w4{stroke-width:4;fill:none}
+.wall{stroke:var(--wall);stroke-width:6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.pipe{stroke:var(--wall);stroke-width:5;fill:none;stroke-linejoin:round}
+.water{fill:var(--water);opacity:.45}
+.wline{stroke:var(--water);stroke-width:2.5;stroke-dasharray:6 6;fill:none}
+.nm{font-family:var(--f-disp);font-size:15px;fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+.sm{font-family:var(--f-body);font-size:13px;fill:var(--muted);paint-order:stroke;stroke:var(--surface);stroke-width:3px}
+.num{font-family:var(--f-disp);font-size:13px;fill:#14213D;text-anchor:middle;dominant-baseline:central}
+.flow{stroke:var(--water);stroke-width:5;stroke-linecap:round;fill:none}
+@media (prefers-reduced-motion: reduce){ *{scroll-behavior:auto} }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>물이 차면 저절로 열리고, 조금 남기고 닫혀요</h1>
+    <p class="sub">전기도 센서도 없이, 플로트(오리)가 낀 마개 막대 하나와 자석만으로 움직이는 자동 배수 수조예요.</p>
+  </header>
+
+  <div class="bar" role="group" aria-label="재생 조절">
+    <button id="btnPlay" class="main" type="button">⏸ 멈춤</button>
+    <button id="btnReset" type="button">처음부터</button>
+    <span class="sp">속도
+      <button class="spd" type="button" data-speed="0.5" aria-pressed="false">느리게</button>
+      <button class="spd" type="button" data-speed="1" aria-pressed="true">보통</button>
+      <button class="spd" type="button" data-speed="2" aria-pressed="false">빠르게</button>
+    </span>
+  </div>
+
+  <div class="stage">
+    <figure class="card" style="margin:0">
+      <div class="svgwrap">
+<svg id="sim" viewBox="0 0 660 580" role="img" aria-label="마개 막대에 낀 플로트가 물 높이에 따라 오르내리며 마개를 열고 닫는 자동 배수 그림">
+  <defs>
+    <clipPath id="clipTank"><path d="M170 130 V420 Q170 470 220 470 H380 Q430 470 430 420 V130 Z"/></clipPath>
+  </defs>
+
+  <!-- 수위 표시선 -->
+  <line class="wline" x1="170" y1="187" x2="430" y2="187"/>
+  <line class="wline" x1="170" y1="423.1" x2="430" y2="423.1"/>
+  <text class="nm" x="158" y="192" text-anchor="end">50L</text>
+  <text class="nm" x="158" y="419" text-anchor="end">7.5L</text>
+
+  <!-- 수조 벽 (왼쪽은 입수관 자리를 비워 둠) -->
+  <path class="wall" d="M170 130 H288"/>
+  <path class="wall" d="M312 130 H322"/>
+  <path class="wall" d="M400 130 H430 V420 Q430 470 380 470 H370"/>
+  <path class="wall" d="M170 130 V426"/>
+  <path class="wall" d="M174.5 445.5 Q185 470 220 470 H330"/>
+
+  <!-- 배수관 -->
+  <path class="pipe" d="M330 470 V540 M370 470 V540"/>
+  <g id="drainFlow" opacity="0">
+    <line class="flow" x1="340" y1="474" x2="340" y2="538" stroke-dasharray="8 10"/>
+    <line class="flow" x1="360" y1="474" x2="360" y2="538" stroke-dasharray="8 10"/>
+  </g>
+  <text class="nm" x="350" y="566" text-anchor="middle">물이 나가요</text>
+
+  <!-- 물이 들어오는 관 (수평, 7.5L 선 아래) -->
+  <path class="pipe" d="M96 432 H170 M96 446 H175"/>
+  <rect x="118" y="428" width="20" height="22" rx="4" fill="var(--chip)" stroke="var(--wall)" stroke-width="2"/>
+  <path d="M123 433 L133 439 L123 445Z" fill="var(--wall)"/>
+  <text class="sm" x="96" y="422">역류방지밸브</text>
+  <line id="inletFlow" class="flow" x1="100" y1="439" x2="116" y2="439" stroke-dasharray="10 12" opacity="0"/>
+  <line id="inletFlow2" class="flow" x1="140" y1="439" x2="166" y2="439" stroke-dasharray="10 12" opacity="0"/>
+  <line id="inletIn" class="flow" x1="176" y1="439" x2="216" y2="439" stroke-dasharray="7 8" opacity="0" style="stroke-width:4"/>
+  <text class="nm" x="100" y="466">물이 들어와요</text>
+
+  <!-- 상단 공기길 + 바람개비 -->
+  <path class="pipe" d="M288 130 V100 M312 130 V100"/>
+  <g id="pinwheel" transform="translate(300 115)">
+    <g fill="var(--turb)">
+      <path d="M0 0 C4 -4 6 -9 0 -12 C-4 -9 -3 -4 0 0Z"/>
+      <path d="M0 0 C4 -4 6 -9 0 -12 C-4 -9 -3 -4 0 0Z" transform="rotate(90)"/>
+      <path d="M0 0 C4 -4 6 -9 0 -12 C-4 -9 -3 -4 0 0Z" transform="rotate(180)"/>
+      <path d="M0 0 C4 -4 6 -9 0 -12 C-4 -9 -3 -4 0 0Z" transform="rotate(270)"/>
+    </g>
+    <circle r="2.6" fill="var(--ink)"/>
+  </g>
+  <g id="airUp" opacity="0" fill="var(--turb)"><path d="M294 94 L300 85 L306 94Z"/></g>
+  <g id="airDown" opacity="0" fill="var(--turb)"><path d="M294 85 L300 94 L306 85Z"/></g>
+
+  <!-- 밀폐 연장통 (뚜껑 위로 솟은 닫힌 통) -->
+  <path class="pipe" d="M322 130 V58 M400 130 V58"/>
+  <rect x="316" y="50" width="90" height="8" rx="2" class="f-fixed"/>
+  <circle cx="326" cy="46" r="4" fill="var(--fixed)"/><circle cx="396" cy="46" r="4" fill="var(--fixed)"/>
+  <!-- 위 자석(뚜껑에 매달림), 아래 자석(받침 위) -->
+  <rect x="338" y="58" width="4" height="18" class="f-fixed"/><rect x="358" y="58" width="4" height="18" class="f-fixed"/>
+  <rect id="magU" x="336" y="76" width="28" height="10" rx="3" fill="var(--spring)" stroke="var(--ink)" stroke-width="1.5"/>
+  <rect x="338" y="112" width="4" height="18" class="f-fixed"/><rect x="358" y="112" width="4" height="18" class="f-fixed"/>
+  <rect id="magL" x="336" y="102" width="28" height="10" rx="3" fill="var(--spring)" stroke="var(--ink)" stroke-width="3"/>
+
+  <!-- 마개 막대 묶음: 막대, 철판, 위·아래 턱, 마개 (r만큼 위로 올라감) -->
+  <g id="gRod">
+    <line x1="350" y1="72" x2="350" y2="460" stroke="var(--rodP)" stroke-width="7" stroke-linecap="round"/>
+    <rect x="338" y="96" width="24" height="6" rx="1.5" fill="#6B7788" stroke="var(--ink)" stroke-width="1.2"/>
+    <rect x="337" y="182" width="26" height="6" rx="2" fill="var(--stop)" stroke="var(--ink)" stroke-width="1"/>
+    <rect x="337" y="445" width="26" height="6" rx="2" fill="var(--stop)" stroke="var(--ink)" stroke-width="1"/>
+    <path d="M324 456 H376 L370 470 H330 Z" fill="var(--plug)" stroke="var(--ink)" stroke-width="1.5" stroke-linejoin="round"/>
+    <line x1="350" y1="470" x2="350" y2="500" stroke="var(--rodP)" stroke-width="4"/>
+    <line x1="338" y1="500" x2="362" y2="500" stroke="var(--rodP)" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <!-- 플로트(오리): 막대에 끼워져 미끄러짐 -->
+  <g id="gFloat">
+    <rect x="280" y="-14" width="140" height="28" rx="14" fill="var(--duck)" stroke="var(--ink)" stroke-width="1.5"/>
+    <circle cx="398" cy="-17" r="11" fill="var(--duck)" stroke="var(--ink)" stroke-width="1.5"/>
+    <path d="M407 -19 L418 -16 L407 -12Z" fill="#FF7A1A" stroke="var(--ink)" stroke-width="1" stroke-linejoin="round"/>
+    <circle cx="402" cy="-20" r="2" fill="var(--ink)"/>
+    <rect x="343" y="-16" width="14" height="32" rx="3" fill="var(--rodD)" stroke="var(--ink)" stroke-width="1"/>
+  </g>
+
+  <!-- 물 -->
+  <g clip-path="url(#clipTank)"><rect id="water" class="water" x="160" y="400" width="280" height="80"/></g>
+
+  <!-- 이름표 -->
+  <g transform="translate(272 112)"><circle r="9" fill="var(--turb)"/><text class="num">1</text><text class="nm" x="-15" y="5" text-anchor="end">바람개비</text></g>
+  <g transform="translate(414 90)"><circle r="9" fill="var(--lever)"/><text class="num">2</text><text class="nm" x="15" y="5">연장통(밀폐)</text></g>
+  <g transform="translate(310 80)"><circle r="9" fill="var(--spring)"/><text class="num">3</text><text class="nm" x="-15" y="5" text-anchor="end">자석 + 철판</text></g>
+  <g transform="translate(366 300)"><circle r="9" fill="var(--rodP)"/><text class="num">4</text><text class="nm" x="15" y="5">마개 막대</text></g>
+  <g transform="translate(314 500)"><circle r="9" fill="var(--plug)"/><text class="num" style="fill:#fff">5</text><text class="nm" x="-15" y="5" text-anchor="end">마개</text></g>
+  <g id="lbFloat"><circle r="9" fill="var(--duck)"/><text class="num">6</text><text class="nm" x="15" y="5">플로트(오리)</text></g>
+  <g id="lbU"><circle r="9" fill="var(--stop)"/><text class="num" style="fill:#fff">7</text><text class="nm" x="15" y="5">위 턱</text></g>
+  <g id="lbL"><circle r="9" fill="var(--stop)"/><text class="num" style="fill:#fff">7</text><text class="nm" x="15" y="5">아래 턱</text></g>
+
+  <!-- 딸깍 말풍선 -->
+  <g id="bubble" opacity="0">
+    <rect x="430" y="14" width="76" height="30" rx="15" fill="var(--lever)" stroke="var(--ink)" stroke-width="2"/>
+    <text x="468" y="29" text-anchor="middle" dominant-baseline="central" style="font-family:var(--f-disp);font-size:19px;fill:#14213D">딸깍!</text>
+  </g>
+</svg>
+      </div>
+      <figcaption class="note">그림은 이해를 돕기 위해 단순하게 그렸어요. 실제 크기와 달라요.</figcaption>
+    </figure>
+
+    <aside class="side">
+      <div class="card">
+        <p id="cap" class="cap" aria-live="off">물이 7.5L 남아 있어요.</p>
+        <ol class="chips" id="chips" style="margin-top:12px">
+          <li><b>1</b>물 차오름</li>
+          <li><b>2</b>위 턱에 닿음</li>
+          <li><b>3</b>딸깍, 열림</li>
+          <li><b>4</b>물 빠짐</li>
+          <li><b>5</b>아래 턱에 걸림</li>
+          <li><b>6</b>딸깍, 닫힘</li>
+        </ol>
+      </div>
+      <div class="stats">
+        <div class="stat"><small>물의 양</small><span class="big"><span id="liters">7.5</span> L</span></div>
+        <div class="stat"><small>마개</small><span id="plugState" class="pill">닫힘</span></div>
+        <div class="stat gauge">
+          <small id="gLabel">플로트가 위 턱을 미는 힘</small>
+          <div class="track"><div class="fill" id="gFill"></div></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <section>
+    <h2>부품 이름표</h2>
+    <ul class="parts">
+      <li><span class="bd" style="background:var(--turb)">1</span><div><strong>바람개비</strong><p>물이 빠질 때 공기가 안으로 들어오면서 돌아요. 물이 찰 때는 돌지 않아요.</p></div></li>
+      <li><span class="bd" style="background:var(--lever)">2</span><div><strong>연장통(밀폐)</strong><p>뚜껑 위로 솟은 닫힌 통이에요. 막대 끝이 이 안에서만 움직여서 수조 밖으로 구멍이 뚫리지 않고, 공기가 새지 않아요.</p></div></li>
+      <li><span class="bd" style="background:var(--spring)">3</span><div><strong>자석 + 철판</strong><p>막대에 붙은 철판을 아래 자석(닫힘) 또는 위 자석(열림)이 붙잡아요. 그래서 마개가 슬금슬금이 아니라 "딸깍!" 하고 열리고 닫혀요. 스프링은 쓰지 않아요.</p></div></li>
+      <li><span class="bd" style="background:var(--rodP)">4</span><div><strong>마개 막대</strong><p>마개, 철판, 위·아래 턱이 한 막대에 붙어 있어요. 배수구는 바람개비 오른쪽, 수조 중심에서 조금 옆에 있어요.</p></div></li>
+      <li><span class="bd" style="background:var(--plug);color:#fff">5</span><div><strong>마개</strong><p>배수구를 막는 고무 뚜껑이에요. 물에 가라앉는 재질이고, 아래 가이드가 구멍 중앙으로 안내해요.</p></div></li>
+      <li><span class="bd" style="background:var(--duck)">6</span><div><strong>플로트(오리)</strong><p>막대에 끼워져 물 위에 떠서 오르내려요. 막대 위에서 헐렁하게 미끄러지는 구간이 있어서 "50L에 열고 7.5L에 닫는" 차이가 생겨요.</p></div></li>
+      <li><span class="bd" style="background:var(--stop);color:#fff">7</span><div><strong>위 턱 · 아래 턱</strong><p>위 턱은 플로트가 막대를 들어 올릴 때, 아래 턱은 플로트가 막대를 끌어내릴 때 걸리는 작은 막이예요.</p></div></li>
+    </ul>
+  </section>
+
+  <section class="why">
+    <h2>왜 물을 조금 남기고, 입수관은 아래에 둘까요?</h2>
+    <p>물을 끝까지 빼면 배수구에 소용돌이가 생겨서 공기가 아래로 새요. 그래서 7.5L(15%)를 남기고 닫아요. 물이 들어오는 관도 7.5L 선보다 아래에 있어서 항상 물에 잠겨 있고, 역류방지밸브가 있어서 공기가 이 관으로 새지 않아요. 그러니 바람은 위쪽 공기길로만 지나가요.</p>
+  </section>
+</div>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var HMAX = 283, HMIN = 46.9, UC = 266, LC = 41.3, R = 10, HANG = LC + R;
+  var FILL_RATE = 19.65, DRAIN_K = 1.134;
+  var BOT = 470;
+  function yOf(h) { return BOT - h; }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function easeOutBack(t) { var c1 = 1.5, c3 = c1 + 1, u = t - 1; return 1 + c3 * u * u * u + c1 * u * u; }
+  function easeOutQuad(t) { return 1 - (1 - t) * (1 - t); }
+  function litersOf(h) { return h <= HMIN ? h / HMIN * 7.5 : 7.5 + (h - HMIN) / (HMAX - HMIN) * 42.5; }
+
+  var el = {
+    water: $('water'), gRod: $('gRod'), gFloat: $('gFloat'), magU: $('magU'), magL: $('magL'), pinwheel: $('pinwheel'),
+    airUp: $('airUp'), airDown: $('airDown'), inletIn: $('inletIn'), inletFlow: $('inletFlow'), inletFlow2: $('inletFlow2'),
+    drainFlow: $('drainFlow'), bubble: $('bubble'), lbFloat: $('lbFloat'), lbU: $('lbU'), lbL: $('lbL'),
+    cap: $('cap'), chips: $('chips').children, liters: $('liters'), plugState: $('plugState'),
+    gLabel: $('gLabel'), gFill: $('gFill'), btnPlay: $('btnPlay'), btnReset: $('btnReset')
+  };
+
+  var CAPS = {
+    rest: '물이 7.5L 남아 있어요. 마개가 닫혀 있어서 새지 않아요. 곧 다시 물이 들어와요.',
+    fill: '1. 물이 차올라요. 플로트는 물 위에 떠서 막대를 따라 미끄러져 올라가요. 마개는 아래 자석이 붙잡아 닫혀 있어요.',
+    push: '2. 플로트가 위 턱에 걸렸어요! 물이 더 차오르면서 플로트가 막대를 위로 밀어요. 아래 자석이 아직 버티고 있어요.',
+    snapOpen: '3. 딸깍! 50L가 되자 미는 힘이 자석을 이겼어요. 막대가 확 올라가 마개가 열리고, 위 자석이 붙잡아요.',
+    drain: '4. 쏴아~ 물이 빠져요. 위 자석이 막대를 붙잡아 마개가 열려 있고, 플로트는 물을 따라 내려가요. 공기가 들어오면서 바람개비가 돌아요.',
+    hang: '5. 플로트가 아래 턱에 걸렸어요. 물이 더 내려가면 플로트의 무게가 막대를 당겨요. 이 무게가 위 자석의 힘을 이기면 막대가 내려와요.',
+    snapClose: '6. 딸깍! 막대가 내려와 마개가 닫히고, 아래 자석이 붙잡아요. 물이 7.5L 남았어요.'
+  };
+
+  var S, playing = true, speed = 1, spinDeg = 0, dash = 0, bubbleT = 0, last = 0;
+
+  function reset() {
+    S = { phase: 'rest', pt: 0, h: HMIN, r: 0, flow: 0 };
+    bubbleT = 0;
+  }
+  function setPhase(p) {
+    S.phase = p; S.pt = 0;
+    if (p === 'snapOpen' || p === 'snapClose') bubbleT = 1.0;
+  }
+
+  function step(dt) {
+    var hp = S.h;
+    S.pt += dt;
+    if (S.phase === 'rest') {
+      S.flow = 0;
+      if (S.pt >= 2.2) setPhase('fill');
+    } else if (S.phase === 'fill') {
+      var rate = FILL_RATE * (S.h > UC ? 0.3 : 1);
+      S.h += rate * dt; S.flow = 0;
+      if (S.h >= HMAX) { S.h = HMAX; setPhase('snapOpen'); }
+    } else if (S.phase === 'snapOpen') {
+      S.flow = 0;
+      var k = Math.min(S.pt / 0.35, 1);
+      S.r = R * easeOutBack(k);
+      if (k >= 1) { S.r = R; setPhase('drain'); }
+    } else if (S.phase === 'drain') {
+      var s = Math.sqrt(S.h) - DRAIN_K * (S.h < HANG ? 0.3 : 1) * dt;
+      s = Math.max(s, Math.sqrt(HMIN)); S.h = s * s;
+      S.flow = -(hp - S.h) / Math.max(dt, 0.001);
+      if (S.h <= HMIN + 0.01) { S.h = HMIN; S.flow = 0; setPhase('snapClose'); }
+    } else if (S.phase === 'snapClose') {
+      S.flow = 0;
+      var k2 = Math.min(S.pt / 0.4, 1);
+      S.r = R * (1 - easeOutQuad(k2));
+      if (k2 >= 1) { S.r = 0; setPhase('rest'); }
+    }
+  }
+
+  function render(dt) {
+    var h = S.h, r = S.r;
+    var hd = clamp(h, LC + r, UC + r);
+
+    el.water.setAttribute('y', yOf(h)); el.water.setAttribute('height', h + 20);
+    el.gRod.setAttribute('transform', 'translate(0 ' + (-r).toFixed(2) + ')');
+    el.gFloat.setAttribute('transform', 'translate(0 ' + yOf(hd).toFixed(2) + ')');
+    el.magL.setAttribute('stroke-width', r < 0.5 ? 4 : 1.5);
+    el.magU.setAttribute('stroke-width', r > R - 0.5 ? 4 : 1.5);
+
+    var yF = yOf(hd), yU = 185 - r - 12, yL = 448 - r + 12;
+    el.lbFloat.setAttribute('transform', 'translate(440 ' + yF.toFixed(1) + ')');
+    el.lbU.setAttribute('transform', 'translate(440 ' + yU.toFixed(1) + ')');
+    el.lbL.setAttribute('transform', 'translate(440 ' + yL.toFixed(1) + ')');
+
+    var open = r > 1.5;
+    var flowIn = S.phase === 'fill';
+    dash += dt * 60;
+    var o = flowIn ? 1 : 0;
+    el.inletFlow.setAttribute('opacity', o); el.inletFlow2.setAttribute('opacity', o); el.inletIn.setAttribute('opacity', o);
+    el.inletFlow.setAttribute('stroke-dashoffset', (-dash).toFixed(1));
+    el.inletFlow2.setAttribute('stroke-dashoffset', (-dash).toFixed(1));
+    el.inletIn.setAttribute('stroke-dashoffset', (-dash).toFixed(1));
+    el.drainFlow.setAttribute('opacity', open ? 1 : 0);
+    var lines = el.drainFlow.children;
+    for (var i = 0; i < lines.length; i++) lines[i].setAttribute('stroke-dashoffset', (-dash * 1.4).toFixed(1));
+
+    spinDeg += Math.min(S.flow, 0) * 0.25 * dt * 57.3;
+    el.pinwheel.setAttribute('transform', 'translate(300 115) rotate(' + spinDeg.toFixed(1) + ')');
+    var pulse = 0.55 + 0.45 * Math.sin(performance.now() / 160);
+    el.airUp.setAttribute('opacity', 0);
+    el.airDown.setAttribute('opacity', S.flow < -1 ? pulse.toFixed(2) : 0);
+
+    if (bubbleT > 0) {
+      bubbleT = Math.max(0, bubbleT - dt);
+      el.bubble.setAttribute('opacity', Math.min(1, bubbleT * 3).toFixed(2));
+    } else { el.bubble.setAttribute('opacity', 0); }
+
+    var f = 0, kind = 'push';
+    if (hd < h - 0.01) { f = (h - hd) / (HMAX - UC); kind = 'push'; }
+    else if (hd > h + 0.01) { f = (hd - h) / (HANG - HMIN); kind = 'pull'; }
+    else { kind = (r > R / 2) ? 'pull' : 'push'; }
+    f = clamp(f, 0, 1);
+    el.gFill.style.width = (f * 100).toFixed(0) + '%';
+    el.gLabel.textContent = kind === 'push' ? '플로트가 위 턱을 미는 힘' : '플로트가 아래 턱을 당기는 힘';
+
+    el.liters.textContent = litersOf(h).toFixed(1);
+    el.plugState.textContent = open ? '열림' : '닫힘';
+    el.plugState.className = 'pill' + (open ? ' open' : '');
+
+    var chip = 0, key = S.phase;
+    if (S.phase === 'fill') { if (h >= UC) { chip = 1; key = 'push'; } }
+    else if (S.phase === 'snapOpen') { chip = 2; }
+    else if (S.phase === 'drain') { if (h <= HANG + 0.5) { chip = 4; key = 'hang'; } else { chip = 3; } }
+    else if (S.phase === 'snapClose') { chip = 5; }
+    for (var c = 0; c < el.chips.length; c++) {
+      var li = el.chips[c];
+      var on = c === chip && S.phase !== 'rest';
+      var done = S.phase !== 'rest' && c < chip;
+      li.className = on ? 'on' : (done ? 'done' : '');
+    }
+    var txt = CAPS[key] || CAPS.rest;
+    if (el.cap.textContent !== txt) el.cap.textContent = txt;
+  }
+
+  function frame(ts) {
+    var dt = last ? Math.min((ts - last) / 1000, 0.05) : 0;
+    last = ts;
+    var d = playing ? dt * speed : 0;
+    if (playing && d > 0) step(d);
+    render(d);
+    requestAnimationFrame(frame);
+  }
+
+  function setPlaying(p) {
+    playing = p;
+    el.btnPlay.textContent = p ? '⏸ 멈춤' : '▶ 재생';
+  }
+  el.btnPlay.addEventListener('click', function () { setPlaying(!playing); });
+  el.btnReset.addEventListener('click', function () { reset(); setPlaying(true); });
+  var spd = document.querySelectorAll('.spd');
+  for (var i = 0; i < spd.length; i++) {
+    spd[i].addEventListener('click', function () {
+      speed = parseFloat(this.getAttribute('data-speed'));
+      for (var j = 0; j < spd.length; j++) spd[j].setAttribute('aria-pressed', spd[j] === this ? 'true' : 'false');
+    });
+  }
+
+  reset();
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  setPlaying(!reduce);
+  render(0);
+  requestAnimationFrame(frame);
+})();
+</script>

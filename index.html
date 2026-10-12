@@ -64,6 +64,7 @@ button[aria-pressed="true"]{border-color:var(--accent);background:var(--chip)}
 .pill{display:inline-block;font-family:var(--f-disp);font-size:24px;padding:2px 14px;border-radius:999px;color:#fff;background:var(--plug)}
 .pill.open{background:var(--good)}
 .gauge{grid-column:1/-1}
+.gaptx{display:block;font-family:var(--f-disp);font-size:22px;margin-top:2px}
 .track{height:16px;border-radius:999px;background:var(--surface);border:1px solid var(--line);overflow:hidden;margin-top:6px}
 .fill{height:100%;width:0;background:var(--warn)}
 .parts{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin:0;padding:0;list-style:none}
@@ -160,16 +161,30 @@ button[aria-pressed="true"]{border-color:var(--accent);background:var(--chip)}
   <path class="pipe" d="M322 130 V58 M400 130 V58"/>
   <rect x="316" y="50" width="90" height="8" rx="2" class="f-fixed"/>
   <circle cx="326" cy="46" r="4" fill="var(--fixed)"/><circle cx="396" cy="46" r="4" fill="var(--fixed)"/>
-  <!-- 위 자석(뚜껑에 매달림), 아래 자석(받침 위) -->
-  <rect x="338" y="58" width="4" height="18" class="f-fixed"/><rect x="358" y="58" width="4" height="18" class="f-fixed"/>
-  <rect id="magU" x="336" y="76" width="28" height="10" rx="3" fill="var(--spring)" stroke="var(--ink)" stroke-width="1.5"/>
-  <rect x="338" y="112" width="4" height="18" class="f-fixed"/><rect x="358" y="112" width="4" height="18" class="f-fixed"/>
-  <rect id="magL" x="336" y="102" width="28" height="10" rx="3" fill="var(--spring)" stroke="var(--ink)" stroke-width="3"/>
+  <!-- 위 자석: 뚜껑에만 고정 (막대가 지나가지 않음). 아래쪽이 S극 -->
+  <rect x="338" y="58" width="4" height="6" class="f-fixed"/><rect x="358" y="58" width="4" height="6" class="f-fixed"/>
+  <g id="magU" stroke="var(--ink)" stroke-width="1.5">
+    <rect x="336" y="64" width="28" height="5" fill="var(--spring)"/>
+    <rect x="336" y="69" width="28" height="5" fill="var(--accent)"/>
+  </g>
+  <!-- 두 자석 사이 간격 표시 -->
+  <g id="gapMark" stroke="var(--spring)" stroke-width="2">
+    <line id="gapLn" x1="376" y1="74" x2="376" y2="100"/>
+    <line x1="371" y1="74" x2="381" y2="74"/>
+    <line id="gapEnd" x1="371" y1="100" x2="381" y2="100"/>
+  </g>
+  <!-- 안내판: 막대 자석 아래, 가운데 구멍으로 막대가 지나감 -->
+  <rect x="322" y="118" width="24" height="4" class="f-fixed"/>
+  <rect x="354" y="118" width="46" height="4" class="f-fixed"/>
 
-  <!-- 마개 막대 묶음: 막대, 철판, 위·아래 턱, 마개 (r만큼 위로 올라감) -->
+  <!-- 마개 막대 묶음: 막대 자석, 막대, 멈춤 고리, 위·아래 턱, 마개 (r만큼 위로 올라감) -->
   <g id="gRod">
-    <line x1="350" y1="72" x2="350" y2="460" stroke="var(--rodP)" stroke-width="7" stroke-linecap="round"/>
-    <rect x="338" y="96" width="24" height="6" rx="1.5" fill="#6B7788" stroke="var(--ink)" stroke-width="1.2"/>
+    <line x1="350" y1="110" x2="350" y2="460" stroke="var(--rodP)" stroke-width="7" stroke-linecap="round"/>
+    <g stroke="var(--ink)" stroke-width="1.5">
+      <rect x="336" y="100" width="28" height="5" fill="var(--spring)"/>
+      <rect x="336" y="105" width="28" height="5" fill="var(--accent)"/>
+    </g>
+    <rect x="341" y="138" width="18" height="5" rx="1.5" fill="#6B7788" stroke="var(--ink)" stroke-width="1.2"/>
     <rect x="337" y="182" width="26" height="6" rx="2" fill="var(--stop)" stroke="var(--ink)" stroke-width="1"/>
     <rect x="337" y="445" width="26" height="6" rx="2" fill="var(--stop)" stroke="var(--ink)" stroke-width="1"/>
     <path d="M324 456 H376 L370 470 H330 Z" fill="var(--plug)" stroke="var(--ink)" stroke-width="1.5" stroke-linejoin="round"/>
@@ -191,8 +206,9 @@ button[aria-pressed="true"]{border-color:var(--accent);background:var(--chip)}
 
   <!-- 이름표 -->
   <g transform="translate(272 112)"><circle r="9" fill="var(--turb)"/><text class="num">1</text><text class="nm" x="-15" y="5" text-anchor="end">바람개비</text></g>
-  <g transform="translate(414 90)"><circle r="9" fill="var(--lever)"/><text class="num">2</text><text class="nm" x="15" y="5">연장통(밀폐)</text></g>
-  <g transform="translate(310 80)"><circle r="9" fill="var(--spring)"/><text class="num">3</text><text class="nm" x="-15" y="5" text-anchor="end">자석 + 철판</text></g>
+  <g transform="translate(414 70)"><circle r="9" fill="var(--lever)"/><text class="num">2</text><text class="nm" x="15" y="5">연장통(밀폐)</text></g>
+  <g transform="translate(310 80)"><circle r="9" fill="var(--spring)"/><text class="num">3</text><text class="nm" x="-15" y="5" text-anchor="end">자석 2개</text></g>
+  <g transform="translate(414 122)"><circle r="9" fill="var(--fixed)"/><text class="num">8</text><text class="nm" x="15" y="5">안내판·멈춤 고리</text></g>
   <g transform="translate(366 300)"><circle r="9" fill="var(--rodP)"/><text class="num">4</text><text class="nm" x="15" y="5">마개 막대</text></g>
   <g transform="translate(314 500)"><circle r="9" fill="var(--plug)"/><text class="num" style="fill:#fff">5</text><text class="nm" x="-15" y="5" text-anchor="end">마개</text></g>
   <g id="lbFloat"><circle r="9" fill="var(--duck)"/><text class="num">6</text><text class="nm" x="15" y="5">플로트(오리)</text></g>
@@ -224,6 +240,7 @@ button[aria-pressed="true"]{border-color:var(--accent);background:var(--chip)}
       <div class="stats">
         <div class="stat"><small>물의 양</small><span class="big"><span id="liters">7.5</span> L</span></div>
         <div class="stat"><small>마개</small><span id="plugState" class="pill">닫힘</span></div>
+        <div class="stat gauge"><small>두 자석 사이</small><span id="gapState" class="gaptx">멀어요 · 거의 안 당겨요</span></div>
         <div class="stat gauge">
           <small id="gLabel">플로트가 위 턱을 미는 힘</small>
           <div class="track"><div class="fill" id="gFill"></div></div>
@@ -237,11 +254,12 @@ button[aria-pressed="true"]{border-color:var(--accent);background:var(--chip)}
     <ul class="parts">
       <li><span class="bd" style="background:var(--turb)">1</span><div><strong>바람개비</strong><p>물이 빠질 때 공기가 안으로 들어오면서 돌아요. 물이 찰 때는 돌지 않아요.</p></div></li>
       <li><span class="bd" style="background:var(--lever)">2</span><div><strong>연장통(밀폐)</strong><p>뚜껑 위로 솟은 닫힌 통이에요. 막대 끝이 이 안에서만 움직여서 수조 밖으로 구멍이 뚫리지 않고, 공기가 새지 않아요.</p></div></li>
-      <li><span class="bd" style="background:var(--spring)">3</span><div><strong>자석 + 철판</strong><p>막대에 붙은 철판을 아래 자석(닫힘) 또는 위 자석(열림)이 붙잡아요. 그래서 마개가 슬금슬금이 아니라 "딸깍!" 하고 열리고 닫혀요. 스프링은 쓰지 않아요.</p></div></li>
-      <li><span class="bd" style="background:var(--rodP)">4</span><div><strong>마개 막대</strong><p>마개, 철판, 위·아래 턱이 한 막대에 붙어 있어요. 배수구는 바람개비 오른쪽, 수조 중심에서 조금 옆에 있어요.</p></div></li>
+      <li><span class="bd" style="background:var(--spring)">3</span><div><strong>자석 2개</strong><p>위 자석은 뚜껑에만 고정되어 있고, 막대는 이 자석을 지나가지 않아요. 막대 꼭대기에 붙은 자석과 서로 다른 극(S·N)이 마주 보게 달아요. 마개가 닫혀 있을 때는 멀리 떨어져 있어서 거의 당기지 않아요. 플로트가 막대를 밀어 올려 가까워지면 끌어당겨서 "딸깍!" 열린 채로 붙잡아요. 두 자석은 끝까지 서로 닿지 않아요.</p></div></li>
+      <li><span class="bd" style="background:var(--rodP)">4</span><div><strong>마개 막대</strong><p>막대 자석, 멈춤 고리, 위·아래 턱, 마개가 한 막대에 붙어 있어요. 닫혀 있을 때는 마개와 막대의 무게, 마개를 누르는 물의 힘으로 닫힌 채로 있어요. 배수구는 바람개비 오른쪽, 수조 중심에서 조금 옆에 있어요.</p></div></li>
       <li><span class="bd" style="background:var(--plug);color:#fff">5</span><div><strong>마개</strong><p>배수구를 막는 고무 뚜껑이에요. 물에 가라앉는 재질이고, 아래 가이드가 구멍 중앙으로 안내해요.</p></div></li>
       <li><span class="bd" style="background:var(--duck)">6</span><div><strong>플로트(오리)</strong><p>막대에 끼워져 물 위에 떠서 오르내려요. 막대 위에서 헐렁하게 미끄러지는 구간이 있어서 "50L에 열고 7.5L에 닫는" 차이가 생겨요.</p></div></li>
       <li><span class="bd" style="background:var(--stop);color:#fff">7</span><div><strong>위 턱 · 아래 턱</strong><p>위 턱은 플로트가 막대를 들어 올릴 때, 아래 턱은 플로트가 막대를 끌어내릴 때 걸리는 작은 막이예요.</p></div></li>
+      <li><span class="bd" style="background:var(--fixed)">8</span><div><strong>안내판 · 멈춤 고리</strong><p>막대 자석 아래에 고정한 판이에요. 가운데 구멍으로 막대가 지나가서 막대가 기울지 않고 똑바로 오르내려요. 막대가 올라가면 안내판 아래의 멈춤 고리가 판에 걸려서, 두 자석이 닿기 전에 멈춰요.</p></div></li>
     </ul>
   </section>
 
@@ -253,17 +271,17 @@ button[aria-pressed="true"]{border-color:var(--accent);background:var(--chip)}
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
-  var HMAX = 283, HMIN = 46.9, UC = 266, LC = 41.3, R = 10, HANG = LC + R;
+  var HMAX = 283, HMIN = 46.9, UC = 266, LC = 41.3, R = 16, HANG = LC + R;
   var FILL_RATE = 19.65, DRAIN_K = 1.134;
   var BOT = 470;
   function yOf(h) { return BOT - h; }
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
-  function easeOutBack(t) { var c1 = 1.5, c3 = c1 + 1, u = t - 1; return 1 + c3 * u * u * u + c1 * u * u; }
   function easeOutQuad(t) { return 1 - (1 - t) * (1 - t); }
   function litersOf(h) { return h <= HMIN ? h / HMIN * 7.5 : 7.5 + (h - HMIN) / (HMAX - HMIN) * 42.5; }
 
   var el = {
-    water: $('water'), gRod: $('gRod'), gFloat: $('gFloat'), magU: $('magU'), magL: $('magL'), pinwheel: $('pinwheel'),
+    water: $('water'), gRod: $('gRod'), gFloat: $('gFloat'), magU: $('magU'), pinwheel: $('pinwheel'),
+    gapLn: $('gapLn'), gapEnd: $('gapEnd'), gapState: $('gapState'),
     airUp: $('airUp'), airDown: $('airDown'), inletIn: $('inletIn'), inletFlow: $('inletFlow'), inletFlow2: $('inletFlow2'),
     drainFlow: $('drainFlow'), bubble: $('bubble'), lbFloat: $('lbFloat'), lbU: $('lbU'), lbL: $('lbL'),
     cap: $('cap'), chips: $('chips').children, liters: $('liters'), plugState: $('plugState'),
@@ -272,12 +290,12 @@ button[aria-pressed="true"]{border-color:var(--accent);background:var(--chip)}
 
   var CAPS = {
     rest: '물이 7.5L 남아 있어요. 마개가 닫혀 있어서 새지 않아요. 곧 다시 물이 들어와요.',
-    fill: '1. 물이 차올라요. 플로트는 물 위에 떠서 막대를 따라 미끄러져 올라가요. 마개는 아래 자석이 붙잡아 닫혀 있어요.',
-    push: '2. 플로트가 위 턱에 걸렸어요! 물이 더 차오르면서 플로트가 막대를 위로 밀어요. 아래 자석이 아직 버티고 있어요.',
-    snapOpen: '3. 딸깍! 50L가 되자 미는 힘이 자석을 이겼어요. 막대가 확 올라가 마개가 열리고, 위 자석이 붙잡아요.',
-    drain: '4. 쏴아~ 물이 빠져요. 위 자석이 막대를 붙잡아 마개가 열려 있고, 플로트는 물을 따라 내려가요. 공기가 들어오면서 바람개비가 돌아요.',
-    hang: '5. 플로트가 아래 턱에 걸렸어요. 물이 더 내려가면 플로트의 무게가 막대를 당겨요. 이 무게가 위 자석의 힘을 이기면 막대가 내려와요.',
-    snapClose: '6. 딸깍! 막대가 내려와 마개가 닫히고, 아래 자석이 붙잡아요. 물이 7.5L 남았어요.'
+    fill: '1. 물이 차올라요. 플로트는 막대를 따라 미끄러져 올라가요. 두 자석은 멀리 떨어져 있어서 거의 당기지 않고, 마개는 무게와 물의 힘으로 닫혀 있어요.',
+    push: '2. 플로트가 위 턱에 걸렸어요! 물이 더 차오르면서 플로트가 막대를 위로 밀어요. 마개를 누르는 물의 힘이 아직 버티고 있어요.',
+    snapOpen: '3. 딸깍! 50L가 되자 미는 힘이 이겨 막대가 올라가요. 두 자석이 가까워지면서 당기는 힘이 세져요. 멈춤 고리가 안내판에 걸려 자석끼리는 닿지 않은 채 붙잡혀요.',
+    drain: '4. 쏴아~ 물이 빠져요. 위 자석이 떨어진 채로 막대 자석을 당겨 마개가 열려 있어요. 플로트는 물을 따라 내려가고, 공기가 들어오면서 바람개비가 돌아요.',
+    hang: '5. 플로트가 아래 턱에 걸렸어요. 물이 더 내려가면 플로트의 무게가 막대를 당겨요. 이 무게가 자석의 힘을 이기면 막대가 내려와요.',
+    snapClose: '6. 딸깍! 막대가 내려오면서 자석이 멀어져 힘이 확 약해지고, 마개가 닫혀요. 물이 7.5L 남았어요.'
   };
 
   var S, playing = true, speed = 1, spinDeg = 0, dash = 0, bubbleT = 0, last = 0;
@@ -304,7 +322,7 @@ button[aria-pressed="true"]{border-color:var(--accent);background:var(--chip)}
     } else if (S.phase === 'snapOpen') {
       S.flow = 0;
       var k = Math.min(S.pt / 0.35, 1);
-      S.r = R * easeOutBack(k);
+      S.r = R * k * k;   // 자석이 가까워질수록 빨라지다가 멈춤 고리에서 딱 멈춤
       if (k >= 1) { S.r = R; setPhase('drain'); }
     } else if (S.phase === 'drain') {
       var s = Math.sqrt(S.h) - DRAIN_K * (S.h < HANG ? 0.3 : 1) * dt;
@@ -326,8 +344,13 @@ button[aria-pressed="true"]{border-color:var(--accent);background:var(--chip)}
     el.water.setAttribute('y', yOf(h)); el.water.setAttribute('height', h + 20);
     el.gRod.setAttribute('transform', 'translate(0 ' + (-r).toFixed(2) + ')');
     el.gFloat.setAttribute('transform', 'translate(0 ' + yOf(hd).toFixed(2) + ')');
-    el.magL.setAttribute('stroke-width', r < 0.5 ? 4 : 1.5);
-    el.magU.setAttribute('stroke-width', r > R - 0.5 ? 4 : 1.5);
+    var held = r > R / 2;
+    el.magU.setAttribute('stroke-width', r > R - 0.5 ? 3 : 1.5);
+    var yGap = (100 - r).toFixed(2);
+    el.gapLn.setAttribute('y2', yGap);
+    el.gapEnd.setAttribute('y1', yGap); el.gapEnd.setAttribute('y2', yGap);
+    var gtx = held ? '가까워요 · 당겨서 붙잡아요 (닿지는 않아요)' : '멀어요 · 거의 안 당겨요';
+    if (el.gapState.textContent !== gtx) el.gapState.textContent = gtx;
 
     var yF = yOf(hd), yU = 185 - r - 12, yL = 448 - r + 12;
     el.lbFloat.setAttribute('transform', 'translate(440 ' + yF.toFixed(1) + ')');

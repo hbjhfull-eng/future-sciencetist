@@ -3,6 +3,7 @@
 ## 파일
 - `01_animation_seesaw.html` : 시소(지렛대) + 옆 오리통 방식 (첫 버전)
 - `02_animation_integrated.html` : 오리를 마개 막대에 끼운 일체형 + 자석 + 밀폐 연장통 (최종안)
+- `drawing.html` : 아크릴 제작 도면 (정면·측면·평면·연장통 상세·막대 조립·U판 전개도, 재단표·구매품·제작 순서). 바닥 R80, 배수구 중심에서 60
 - `tank_calc.py` : 수위·수압·플로트·자석 조건 계산 (`python3 tank_calc.py`)
   - 위쪽 상수(W, H, R, PLUG_D)만 바꾸면 다시 계산돼요.
 

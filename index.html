@@ -41,6 +41,9 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 button.main{background:var(--accent);border-color:var(--accent);color:#fff}
 button[aria-pressed="true"]{border-color:var(--accent);background:var(--chip)}
 .sp{display:flex;gap:6px;align-items:center;color:var(--muted)}
+.dwg{margin-left:auto;font-family:var(--f-disp);font-size:18px;color:var(--accent);text-decoration:none;border:2px solid var(--accent);
+  border-radius:12px;padding:8px 16px;min-height:44px;display:inline-flex;align-items:center}
+.dwg:hover{background:var(--chip)}
 .stage{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
 @media (max-width:900px){.stage{grid-template-columns:minmax(0,1fr)}}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px}
@@ -102,6 +105,7 @@ button[aria-pressed="true"]{border-color:var(--accent);background:var(--chip)}
       <button class="spd" type="button" data-speed="1" aria-pressed="true">보통</button>
       <button class="spd" type="button" data-speed="2" aria-pressed="false">빠르게</button>
     </span>
+    <a class="dwg" href="drawing.html">제작 도면 보기 →</a>
   </div>
 
   <div class="stage">

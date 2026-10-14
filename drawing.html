@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>자동 배수 수조 제작 도면</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap">
+<style>
+/* 도면은 인쇄·가공업체 전달용이라 밝은 종이 색으로만 그림 */
+:root{
+  --bg:#EEF3F9; --paper:#FFFFFF; --ink:#14213D; --muted:#52627A; --line:#CBD6E4; --chip:#E3EAF4;
+  --dim:#C2410C; --water:#1D8FE0; --hid:#6B7A90; --mag:#E5407B; --magS:#2A62C9; --acc:#2A62C9;
+  --f-disp:"Jua","Gowun Dodum","Malgun Gothic",sans-serif;
+  --f-body:"Gowun Dodum","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;padding:20px 16px 40px}
+.wrap{max-width:1180px;margin-inline:auto;display:flex;flex-direction:column;gap:18px}
+h1{font-family:var(--f-disp);font-weight:400;font-size:clamp(26px,4vw,36px);line-height:1.2;margin:0}
+h2{font-family:var(--f-disp);font-weight:400;font-size:22px;margin:0 0 8px}
+.sub{margin:6px 0 0;color:var(--muted)}
+.nav{display:flex;flex-wrap:wrap;gap:8px}
+.nav a,.nav button{font:inherit;font-family:var(--f-disp);font-size:16px;border:2px solid var(--line);background:var(--paper);color:var(--ink);
+  border-radius:10px;padding:6px 14px;text-decoration:none;cursor:pointer;min-height:40px;display:inline-flex;align-items:center}
+.nav a:hover,.nav button:hover{border-color:var(--acc)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-width:0}
+.sheet.wide{grid-column:1/-1}
+.sheet header{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.sheet header span{color:var(--muted);font-size:14px}
+.sheet svg{display:block;width:100%;height:auto}
+.sheet p.n{margin:6px 0 0;color:var(--muted);font-size:14.5px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--chip);font-weight:400;font-family:var(--f-disp)}
+td.c,th.c{text-align:center;white-space:nowrap}
+.tbl{overflow-x:auto}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--muted);margin:0;padding:0;list-style:none}
+.legend svg{width:36px;height:10px;vertical-align:middle;margin-right:4px}
+ol.steps{margin:0;padding-left:22px}
+ol.steps li{margin:4px 0}
+.warn{background:#FFF4E5;border:1px solid #F5C58A;border-radius:12px;padding:10px 14px}
+.warn p{margin:0}
+/* 도면 선 */
+.o{stroke:var(--ink);stroke-width:1.6;fill:none;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.of{stroke:var(--ink);stroke-width:1.4;vector-effect:non-scaling-stroke}
+.h{stroke:var(--hid);stroke-width:1.1;fill:none;stroke-dasharray:6 4;vector-effect:non-scaling-stroke}
+.c{stroke:var(--hid);stroke-width:.8;fill:none;stroke-dasharray:14 3 2 3;vector-effect:non-scaling-stroke}
+.d{stroke:var(--dim);stroke-width:.8;fill:none;vector-effect:non-scaling-stroke}
+.da{fill:var(--dim)}
+.w{stroke:var(--water);stroke-width:1.2;fill:none;stroke-dasharray:8 5;vector-effect:non-scaling-stroke}
+.g{stroke:var(--hid);stroke-width:1;fill:none;stroke-dasharray:3 3;vector-effect:non-scaling-stroke}
+.t{fill:var(--ink);font-family:var(--f-body)}
+.td{fill:var(--dim);font-family:var(--f-body)}
+.tw{fill:var(--water);font-family:var(--f-body)}
+@media print{
+  @page{size:A3 landscape;margin:10mm}
+  body{background:#fff;padding:0}
+  .nav{display:none}
+  .sheet{break-inside:avoid;border-color:#999}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>무전원 자동 배수 수조 · 아크릴 제작 도면</h1>
+    <p class="sub">단위 mm · 아크릴 10T(몸통·뚜껑), 5T(연장통) · 높이는 모두 <b>수조 안쪽 바닥면 = 0</b> 기준이에요. 그림은 비율대로 그렸지만, 가공은 반드시 적힌 숫자를 따라 주세요.</p>
+  </header>
+
+  <nav class="nav" aria-label="바로가기">
+    <a href="index.html">← 움직이는 그림</a>
+    <a href="#parts">재단표</a>
+    <a href="#buy">구매품</a>
+    <a href="#steps">제작 순서</a>
+    <button type="button" onclick="window.print()">인쇄 / PDF 저장</button>
+  </nav>
+
+  <ul class="legend" aria-label="선의 뜻">
+    <li><svg viewBox="0 0 36 10"><line x1="0" y1="5" x2="36" y2="5" stroke="#14213D" stroke-width="2"/></svg>보이는 선</li>
+    <li><svg viewBox="0 0 36 10"><line x1="0" y1="5" x2="36" y2="5" stroke="#6B7A90" stroke-width="1.5" stroke-dasharray="6 4"/></svg>가려진 선</li>
+    <li><svg viewBox="0 0 36 10"><line x1="0" y1="5" x2="36" y2="5" stroke="#6B7A90" stroke-width="1" stroke-dasharray="14 3 2 3"/></svg>중심선</li>
+    <li><svg viewBox="0 0 36 10"><line x1="0" y1="5" x2="36" y2="5" stroke="#1D8FE0" stroke-width="1.5" stroke-dasharray="8 5"/></svg>물 높이</li>
+    <li><svg viewBox="0 0 36 10"><line x1="0" y1="5" x2="36" y2="5" stroke="#C2410C" stroke-width="1"/></svg>치수</li>
+  </ul>
+
+  <div class="grid">
+    <section class="sheet"><header><h2>① 정면도</h2><span>앞판 쪽에서 본 모습</span></header>
+      <svg id="vFront" role="img" aria-label="정면도: 폭 370, 전체 높이 630, 안쪽 바닥 R80, 입수관과 배수관 위치"></svg>
+      <p class="n">몸통은 한 장을 R80으로 두 번 굽힌 U자 판이에요. 앞판·뒤판은 굽히지 않은 직사각형이고, 아래 120mm가 다리 역할을 해요.</p>
+    </section>
+    <section class="sheet"><header><h2>② 우측면도</h2><span>오른쪽에서 본 모습</span></header>
+      <svg id="vSide" role="img" aria-label="우측면도: 깊이 370, 앞판·뒤판 다리, 받침 가로대, 입수관과 역류방지밸브"></svg>
+      <p class="n">입수관은 앞판에 달려요. 앞판·뒤판은 평평해서 구멍 뚫기와 피팅 달기가 쉬워요.</p>
+    </section>
+    <section class="sheet"><header><h2>③ 평면도 (뚜껑)</h2><span>위에서 본 모습</span></header>
+      <svg id="vTop" role="img" aria-label="평면도: 뚜껑 370x370, 공기 구멍, 막대 구멍, 연장통, 볼트 구멍 8개"></svg>
+      <p class="n">뚜껑은 보강 각봉에 M5 볼트 8개와 고무 패킹으로 고정해요. 공기는 공기관(바람개비)으로만 드나들어야 하니 꼭 밀폐해 주세요.</p>
+    </section>
+    <section class="sheet"><header><h2>④ 연장통 상세 (단면)</h2><span>막대 중심을 자른 모습 · 닫힘 상태</span></header>
+      <svg id="vBox" role="img" aria-label="연장통 단면: 위 자석, 막대 자석, 닫힘 간격 30, 열림 간격 8, 행정 22, 안내판, 멈춤 고리"></svg>
+      <p class="n">닫혔을 때 두 자석 간격 30mm(거의 안 당김) → 열리면 8mm(당겨서 붙잡음). 멈춤 고리가 안내판에 걸려서 자석끼리는 닿지 않아요.</p>
+    </section>
+    <section class="sheet"><header><h2>⑤ 마개 막대 조립</h2><span>닫힘 상태 높이</span></header>
+      <svg id="vRod" role="img" aria-label="마개 막대 조립: 마개, 아래 턱 35, 위 턱 444, 멈춤 고리 518, 막대 끝 565, 플로트 지름 200"></svg>
+      <p class="n">턱 높이는 계산값이에요. 물을 부어 보며 ±10mm 안에서 맞추니, 턱은 접착하지 말고 고정나사(세트스크루)나 O링으로 끼워 두세요.</p>
+    </section>
+    <section class="sheet"><header><h2>⑥ 몸통 U판 전개도</h2><span>굽히기 전 판 · 10T</span></header>
+      <svg id="vBlank" role="img" aria-label="U판 전개도: 350 x 약 1297, 굽힘선 2곳 R80"></svg>
+      <p class="n">전개 길이는 업체 열곡 방식에 따라 달라져요. 업체와 확인하고, <b>배수 구멍은 굽힌 뒤에</b> 뚫어 주세요.</p>
+    </section>
+  </div>
+
+  <section class="sheet wide" id="parts">
+    <h2>아크릴 재단표</h2>
+    <div class="tbl"><table>
+      <thead><tr><th class="c">기호</th><th>이름</th><th class="c">두께</th><th class="c">크기 (mm)</th><th class="c">수량</th><th>가공</th></tr></thead>
+      <tbody>
+        <tr><td class="c">A</td><td>앞판</td><td class="c">10T</td><td class="c">370 × 630</td><td class="c">1</td><td>입수 구멍 Ø20: 왼쪽 끝에서 85, 아래 끝에서 165 (안쪽 바닥 기준 높이 35)</td></tr>
+        <tr><td class="c">A′</td><td>뒤판</td><td class="c">10T</td><td class="c">370 × 630</td><td class="c">1</td><td>가공 없음</td></tr>
+        <tr><td class="c">B</td><td>몸통 U판</td><td class="c">10T</td><td class="c">350 × 약 1297 (전개)</td><td class="c">1</td><td>R80(안쪽) 열곡 2곳, 안쪽 폭 350. 굽힌 뒤 바닥 배수 구멍 Ø32 (중심에서 오른쪽 60, 앞뒤 가운데)</td></tr>
+        <tr><td class="c">C</td><td>뚜껑</td><td class="c">10T</td><td class="c">370 × 370</td><td class="c">1</td><td>공기 구멍 Ø24, 막대 구멍 Ø50, 볼트 구멍 Ø5.5 × 8 (③ 평면도)</td></tr>
+        <tr><td class="c">D</td><td>뚜껑 보강 각봉</td><td class="c">20 × 20</td><td class="c">350 / 310</td><td class="c">2 / 2</td><td>안쪽 위 끝에 맞춰 접착, M5 탭 8곳</td></tr>
+        <tr><td class="c">E</td><td>연장통 벽</td><td class="c">5T</td><td class="c">90 × 100 / 80 × 100</td><td class="c">2 / 2</td><td>바깥 90 × 90 상자로 접착 (안쪽 80 × 80)</td></tr>
+        <tr><td class="c">F</td><td>연장통 덮개</td><td class="c">5T</td><td class="c">90 × 90</td><td class="c">1</td><td>볼트 구멍 Ø4.5 × 4 (모서리에서 8), 아래면 가운데에 위 자석 접착</td></tr>
+        <tr><td class="c">G</td><td>안내판</td><td class="c">5T</td><td class="c">80 × 80</td><td class="c">1</td><td>가운데 구멍 Ø10, 연장통 안 뚜껑 윗면에서 40~45 높이에 접착</td></tr>
+        <tr><td class="c">H</td><td>받침 가로대</td><td class="c">10T</td><td class="c">350 × 60</td><td class="c">2</td><td>앞판·뒤판 다리 사이, 바닥에서 0~60, 좌우 중심에서 ±150</td></tr>
+        <tr><td class="c">I</td><td>공기관</td><td class="c">파이프</td><td class="c">바깥 Ø30 / 안 Ø24, 길이 80</td><td class="c">1</td><td>뚜껑 공기 구멍 위에 접착, 끝에 바람개비</td></tr>
+        <tr><td class="c">J</td><td>배수관</td><td class="c">파이프</td><td class="c">바깥 Ø40 / 안 Ø32, 길이 100</td><td class="c">1</td><td>바닥 배수 구멍 아래에 중심 맞춰 접착</td></tr>
+        <tr><td class="c">K</td><td>입수관</td><td class="c">파이프</td><td class="c">바깥 Ø20 / 안 Ø16, 길이 80</td><td class="c">1</td><td>앞판 입수 구멍에 끼워 접착, 바깥쪽에 역류방지밸브</td></tr>
+        <tr><td class="c">L</td><td>마개 막대</td><td class="c">환봉</td><td class="c">Ø8, 길이 620</td><td class="c">1</td><td>현장에서 길이 맞춰 자르기 (⑤)</td></tr>
+        <tr><td class="c">M</td><td>위 턱 · 아래 턱</td><td class="c">5T</td><td class="c">Ø24 원판, 가운데 Ø8</td><td class="c">2</td><td>막대에 끼워 높이 조절</td></tr>
+        <tr><td class="c">N</td><td>멈춤 고리</td><td class="c">10T</td><td class="c">Ø20 원판, 가운데 Ø8</td><td class="c">1</td><td>막대에 끼워 닫힘 상태 높이 518~528</td></tr>
+        <tr><td class="c">O</td><td>자석 받침</td><td class="c">5T</td><td class="c">Ø20 원판</td><td class="c">1</td><td>막대 끝에 접착, 위에 막대 자석 접착</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="sheet wide" id="buy">
+    <h2>구매품</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>이름</th><th class="c">규격</th><th class="c">수량</th><th>메모</th></tr></thead>
+      <tbody>
+        <tr><td>네오디뮴 자석</td><td class="c">원형 Ø20 × 5</td><td class="c">2</td><td>위 자석은 아래가 S, 막대 자석은 위가 N이 되게 (서로 당기는 방향). 간격별 힘을 재서 <code>tank_calc.py</code>에 넣기</td></tr>
+        <tr><td>고무마개</td><td class="c">Ø32 구멍에 맞는 테이퍼형</td><td class="c">1</td><td>가운데에 Ø8 구멍을 뚫어 막대를 끼움. 물에 가라앉는 고무</td></tr>
+        <tr><td>플로트</td><td class="c">Ø200 × 높이 60</td><td class="c">1</td><td>가운데에 안지름 12 슬리브. 총 무게 500g 이상이 되게 추로 맞춤 (오리 모양 장식 가능)</td></tr>
+        <tr><td>역류방지밸브</td><td class="c">입수관 Ø20에 맞는 것</td><td class="c">1</td><td>물이 들어오는 방향 표시 확인</td></tr>
+        <tr><td>고무 패킹</td><td class="c">EPDM 3T, 폭 20</td><td class="c">약 1.5m</td><td>뚜껑·연장통 덮개 아래</td></tr>
+        <tr><td>볼트</td><td class="c">M5 × 25 / M4 × 15</td><td class="c">8 / 4</td><td>스테인리스, 와셔 포함</td></tr>
+        <tr><td>바람개비</td><td class="c">공기관 Ø30에 맞는 것</td><td class="c">1</td><td>물이 빠질 때 들어오는 공기로 돌아감</td></tr>
+        <tr><td>아크릴 접착제</td><td class="c">용제형 + 두꺼운 틈용</td><td class="c">-</td><td>물이 닿는 이음새는 실리콘으로 한 번 더 막기</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="sheet wide" id="steps">
+    <h2>제작 순서</h2>
+    <ol class="steps">
+      <li>B판을 R80으로 굽혀 U자 몸통을 만들고, 굽힌 뒤 바닥에 배수 구멍 Ø32를 뚫어요.</li>
+      <li>앞판(A)·뒤판(A′)을 U판 양 끝에 붙여요. 아래 120mm는 다리가 돼요. 다리 사이에 받침 가로대(H) 2개를 붙여요.</li>
+      <li>배수관(J), 입수관(K)을 붙이고, 입수관 바깥에 역류방지밸브를 달아요.</li>
+      <li>안쪽 위 끝에 보강 각봉(D)을 붙이고 M5 탭을 내요. 앞판에 50L(416), 7.5L(69) 선을 표시해요.</li>
+      <li>뚜껑(C)에 공기관(I)과 연장통 벽(E)을 붙이고, 연장통 안에 안내판(G)을 붙여요.</li>
+      <li>막대(L)에 고무마개 → 아래 턱 → 플로트 → 위 턱 → 멈춤 고리 순서로 끼우고, 위에서 막대를 안내판 구멍에 통과시킨 뒤 자석 받침(O)과 막대 자석을 붙여요.</li>
+      <li>덮개(F) 아래에 위 자석을 붙이고 볼트로 닫아요. 뚜껑을 패킹과 볼트로 닫아요.</li>
+      <li><b>물 시험</b>: 물을 채우며 50L 근처에서 열리는지, 7.5L 근처에서 닫히는지 보고 턱 높이·멈춤 고리 위치로 맞춰요.</li>
+    </ol>
+  </section>
+
+  <div class="warn" role="note"><p><b>업체에 꼭 확인할 것</b> · 10T 아크릴 R80 열곡이 가능한지, 전개 길이를 얼마로 잡는지 물어봐 주세요. 어렵다고 하면 R을 100으로 키우거나, 판 두께를 8T로 바꾸는 방법이 있어요. R이 바뀌면 배수 구멍이 평평한 바닥 위에 오도록 중심 거리(60)도 같이 줄여야 해요.</p></div>
+</div>
+
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  // z(높이)는 위가 +. 화면 좌표 y = -z
+  function V(id, x0, z0, x1, z1, fs) {
+    var s = document.getElementById(id);
+    s.setAttribute('viewBox', [x0, -z1, x1 - x0, z1 - z0].join(' '));
+    var api = { fs: fs };
+    function el(tag, a, txt) {
+      var e = document.createElementNS(NS, tag);
+      for (var k in a) e.setAttribute(k, a[k]);
+      if (txt != null) e.textContent = txt;
+      s.appendChild(e); return e;
+    }
+    api.el = el;
+    api.L = function (x1, z1, x2, z2, c) { return el('line', { x1: x1, y1: -z1, x2: x2, y2: -z2, 'class': c || 'o' }); };
+    api.R = function (x1, z1, x2, z2, c, fill) {
+      var a = { x: Math.min(x1, x2), y: -Math.max(z1, z2), width: Math.abs(x2 - x1), height: Math.abs(z2 - z1), 'class': c || 'o' };
+      if (fill) { a.fill = fill; a['class'] = 'of'; }
+      return el('rect', a);
+    };
+    api.C = function (x, z, r, c, fill) {
+      var a = { cx: x, cy: -z, r: r, 'class': c || 'o' };
+      if (fill) { a.fill = fill; a['class'] = 'of'; }
+      return el('circle', a);
+    };
+    api.P = function (d, c, fill) { var a = { d: d, 'class': c || 'o' }; if (fill) { a.fill = fill; a['class'] = 'of'; } return el('path', a); };
+    api.T = function (x, z, t, o) {
+      o = o || {};
+      var a = { x: x, y: -z, 'class': o.c || 't', 'font-size': (o.s || 1) * fs, 'text-anchor': o.a || 'middle', 'dominant-baseline': 'middle' };
+      if (o.rot) a.transform = 'rotate(' + o.rot + ' ' + x + ' ' + (-z) + ')';
+      return el('text', a, t);
+    };
+    function arrow(x, z, dx, dz) {
+      var L = fs * 0.55, W = fs * 0.2, n = Math.hypot(dx, dz), ux = dx / n, uz = dz / n;
+      var bx = x - ux * L, bz = z - uz * L;
+      api.P('M' + x + ' ' + (-z) + ' L' + (bx - uz * W) + ' ' + (-(bz + ux * W)) + ' L' + (bx + uz * W) + ' ' + (-(bz - ux * W)) + 'Z', 'da').setAttribute('class', 'da');
+    }
+    // 가로 치수: x1~x2, 치수선 높이 z, 보조선은 각 끝의 zFrom 에서 시작
+    api.dimH = function (x1, x2, z, label, ext) {
+      if (ext) { api.L(x1, ext[0], x1, z + Math.sign(z - ext[0]) * fs * 0.3, 'd'); api.L(x2, ext[1], x2, z + Math.sign(z - ext[1]) * fs * 0.3, 'd'); }
+      api.L(x1, z, x2, z, 'd'); arrow(x1, z, -1, 0); arrow(x2, z, 1, 0);
+      api.T((x1 + x2) / 2, z + fs * 0.6, label, { c: 'td' });
+    };
+    api.dimV = function (z1, z2, x, label, ext, side) {
+      if (ext) { api.L(ext[0], z1, x + Math.sign(x - ext[0]) * fs * 0.3, z1, 'd'); api.L(ext[1], z2, x + Math.sign(x - ext[1]) * fs * 0.3, z2, 'd'); }
+      api.L(x, z1, x, z2, 'd'); arrow(x, Math.min(z1, z2), 0, -1); arrow(x, Math.max(z1, z2), 0, 1);
+      var off = (side === 'r' ? 1 : -1) * fs * 0.6;
+      api.T(x + off, (z1 + z2) / 2, label, { c: 'td', rot: -90 });
+    };
+    api.lead = function (x1, z1, x2, z2, label, anchor) {
+      api.L(x1, z1, x2, z2, 'd');
+      api.C(x1, z1, fs * 0.12, 'd', 'var(--dim)');
+      api.T(x2 + (anchor === 'end' ? -fs * 0.3 : fs * 0.3), z2, label, { a: anchor || 'start', c: 'td' });
+    };
+    return api;
+  }
+
+  // ---- 공통 치수 (mm) ----
+  var IW = 175, OW = 185, RI = 80, RO = 90, H = 500, BOT = -10, FLOOR = -130, LID = 510;
+  var XR = 60, XA = -40;                 // 막대(배수구) 위치, 공기관 위치
+  var Z50 = 416, Z75 = 69;
+  var BOXo = 45, BOXi = 40, BOXtop = 610, CAPtop = 615;
+
+  function uInner(k) { // U판 안쪽 윤곽 (화면 좌표)
+    return 'M' + (-IW) + ' ' + (-H) + ' L' + (-IW) + ' ' + (-RI) + ' A' + RI + ' ' + RI + ' 0 0 0 ' + (-IW + RI) + ' 0 L' + (IW - RI) + ' 0 A' + RI + ' ' + RI + ' 0 0 0 ' + IW + ' ' + (-RI) + ' L' + IW + ' ' + (-H);
+  }
+  function uOuter() {
+    return 'M' + (-OW) + ' ' + (-H) + ' L' + (-OW) + ' ' + (-RI) + ' A' + RO + ' ' + RO + ' 0 0 0 ' + (-IW + RI) + ' 10 L' + (IW - RI) + ' 10 A' + RO + ' ' + RO + ' 0 0 0 ' + OW + ' ' + (-RI) + ' L' + OW + ' ' + (-H);
+  }
+
+  // ---------- ① 정면도 ----------
+  (function () {
+    var v = V('vFront', -330, -200, 330, 700, 13);
+    v.R(-OW, FLOOR, OW, H);                       // 앞판
+    v.P(uOuter(), 'h'); v.P(uInner(), 'h');        // 몸통 (앞판 뒤라 가려짐)
+    v.R(-OW, H, OW, LID);                          // 뚜껑
+    v.R(-OW, FLOOR, -OW + 10, FLOOR + 60, 'h'); v.R(OW - 10, FLOOR, OW, FLOOR + 60, 'h');
+    v.R(-150 - 5, FLOOR, -150 + 5, FLOOR + 60, 'h'); v.R(150 - 5, FLOOR, 150 + 5, FLOOR + 60, 'h'); // 받침 가로대 단면
+    // 물 높이
+    v.L(-IW + 2, Z50, IW - 2, Z50, 'w'); v.T(-IW + 8, Z50 + 9, '50L · 416', { a: 'start', c: 'tw', s: .9 });
+    v.L(-IW + 8, Z75, IW - 8, Z75, 'w'); v.T(-IW + 22, Z75 + 9, '7.5L · 69', { a: 'start', c: 'tw', s: .9 });
+    // 입수 구멍 (앞판에 보임)
+    v.C(-100, 35, 10); v.L(-114, 35, -86, 35, 'c'); v.L(-100, 21, -100, 49, 'c');
+    // 배수관
+    v.R(XR - 20, BOT, XR + 20, BOT - 100, 'h'); v.L(XR, 20, XR, -125, 'c');
+    // 공기관, 연장통
+    v.R(XA - 15, LID, XA + 15, LID + 80); v.L(XA, LID - 20, XA, LID + 95, 'c');
+    v.R(XR - BOXo, LID, XR + BOXo, BOXtop); v.R(XR - BOXo, BOXtop, XR + BOXo, CAPtop);
+    v.L(XR, LID - 20, XR, CAPtop + 15, 'c');
+    v.T(XA, LID + 95, '공기관', { s: .85 }); v.T(XR + 75, 600, '연장통', { a: 'start', s: .85 });
+    // 치수
+    v.dimH(-OW, OW, FLOOR - 40, '370', [FLOOR, FLOOR]);
+    v.dimH(-IW, IW, 470, '안 350', [H - 10, H - 10]);
+    v.dimV(FLOOR, H, -OW - 60, '630', [-OW, -OW]);
+    v.dimV(0, H, -OW - 30, '안 높이 500', [-IW, -IW]);
+    v.dimV(H, CAPtop, XR + BOXo + 40, '105', [XR + BOXo, XR + BOXo], 'r');
+    v.dimV(0, 35, -150, '35', [-100, -100]);
+    v.dimH(0, XR, -45, '60', [0, BOT - 5]);
+    v.L(0, -20, 0, 640, 'c');
+    v.dimH(XA, 0, LID + 120, '40', [LID + 80, LID + 100]);
+    v.lead(IW - RI + 40, 18, 230, 120, '안쪽 R80', 'start');
+    v.lead(-100 - 8, 42, -250, 110, '입수 Ø20', 'start');
+    v.lead(XR + 20, -60, 230, -60, '배수관 Ø40', 'start');
+    v.T(0, FLOOR - 75, '다리 높이 120 · 바닥판 10', { s: .85 });
+  })();
+
+  // ---------- ② 우측면도 (가로축 = 앞뒤 y, 왼쪽이 앞) ----------
+  (function () {
+    var v = V('vSide', -340, -200, 330, 700, 13);
+    v.R(-OW, FLOOR, -IW, H); v.R(IW, FLOOR, OW, H);   // 앞판, 뒤판
+    v.R(-IW, BOT, IW, H);                              // 몸통 오른쪽 벽면
+    v.L(-IW, RI, IW, RI, 'g'); v.T(0, RI + 10, '굽힘 시작선 (높이 80)', { s: .8 });
+    v.R(-OW, H, OW, LID);
+    v.R(-IW, FLOOR, IW, FLOOR + 60);                   // 가로대
+    v.R(-20, BOT, 20, FLOOR + 60); v.R(-20, FLOOR + 60, 20, BOT - 100, 'h');
+    v.R(-BOXo, LID, BOXo, BOXtop); v.R(-BOXo, BOXtop, BOXo, CAPtop);
+    // 입수관 + 밸브 (앞쪽으로 튀어나옴)
+    v.R(-OW - 80, 25, -OW, 45); v.R(-OW - 60, 20, -OW - 30, 50, null, '#E3EAF4');
+    v.P('M' + (-OW - 52) + ' -28 L' + (-OW - 38) + ' -35 L' + (-OW - 52) + ' -42Z', 'of', '#52627A');
+    v.T(-OW - 45, 68, '역류방지밸브', { s: .8 });
+    v.L(-OW - 95, 35, -OW + 15, 35, 'c');
+    v.L(0, FLOOR - 10, 0, 640, 'c');
+    v.L(-IW + 2, Z50, IW - 2, Z50, 'w'); v.L(-IW + 2, Z75, IW - 2, Z75, 'w');
+    v.dimH(-OW, OW, FLOOR - 40, '370', [FLOOR, FLOOR]);
+    v.dimH(-IW, IW, 455, '안 350', [H - 10, H - 10]);
+    v.dimH(-BOXo, BOXo, CAPtop + 30, '90', [CAPtop, CAPtop]);
+    v.dimV(FLOOR, FLOOR + 60, OW + 30, '60', [OW, OW], 'r');
+    v.dimV(FLOOR, BOT, OW + 65, '120', [OW, IW], 'r');
+    v.T(-IW + 40, FLOOR + 30, '받침 가로대 H', { a: 'start', s: .8 });
+    v.T(-OW - 5, -170, '앞', { a: 'end', s: .9 }); v.T(OW + 5, -170, '뒤', { a: 'start', s: .9 });
+  })();
+
+  // ---------- ③ 평면도 (가로 x, 세로 y: 위쪽이 뒤) ----------
+  (function () {
+    var v = V('vTop', -270, -270, 280, 250, 11);
+    v.R(-OW, -OW, OW, OW);
+    v.R(-IW, -IW, IW, IW, 'h');                    // 안쪽 벽
+    v.R(-IW, -IW, IW, -IW + 20, 'h'); v.R(-IW, IW - 20, IW, IW, 'h');
+    v.R(-IW, -IW + 20, -IW + 20, IW - 20, 'h'); v.R(IW - 20, -IW + 20, IW, IW - 20, 'h');
+    v.C(XA, 0, 12); v.C(XA, 0, 15, 'h');
+    v.R(XR - BOXo, -BOXo, XR + BOXo, BOXo); v.R(XR - BOXi, -BOXi, XR + BOXi, BOXi, 'h'); v.C(XR, 0, 25, 'h');
+    [[-8, -8], [8, -8], [-8, 8], [8, 8]].forEach(function (p) {
+      v.C(XR + p[0] * 4.6, p[1] * 4.6, 2.25);
+    });
+    var bolts = [[-165, -100], [-165, 100], [165, -100], [165, 100], [-100, -165], [100, -165], [-100, 165], [100, 165]];
+    bolts.forEach(function (p) { v.C(p[0], p[1], 2.75); });
+    v.L(-210, 0, 225, 0, 'c'); v.L(0, -210, 0, 215, 'c'); v.L(XR, -60, XR, 60, 'c'); v.L(XA, -25, XA, 25, 'c');
+    v.dimH(-OW, OW, -225, '370', [-OW, -OW]);
+    v.dimV(-OW, OW, -225, '370', [-OW, -OW]);
+    v.dimH(XA, 0, 70, '40', [10, 10]);
+    v.dimH(0, XR, 70, '60', [10, 50]);
+    v.dimH(XR - BOXo, XR + BOXo, -70, '90', [-BOXo, -BOXo]);
+    v.dimH(100, 165, -205, '65', [-165, -165]);
+    v.dimV(-100, 100, 205, '200', [165, 165], 'r');
+    v.dimV(100, 165, 240, '65', [100, 100], 'r');
+    v.lead(XA - 9, 9, -150, 120, '공기 구멍 Ø24', 'start');
+    v.lead(XR + 18, 18, 120, 125, '막대 구멍 Ø50', 'start');
+    v.lead(-165, 100 + 3, -220, 150, 'M5 볼트 × 8', 'start');
+    v.T(0, -255, '앞 (입수관 쪽)', { s: .9 });
+  })();
+
+  // ---------- ④ 연장통 상세 단면 (가로 = 막대 중심에서의 거리) ----------
+  (function () {
+    var v = V('vBox', -105, 470, 120, 640, 5.2);
+    // 뚜껑 (막대 구멍 Ø50)
+    v.R(-100, 500, -25, 510, null, '#E3EAF4'); v.R(25, 500, 100, 510, null, '#E3EAF4');
+    // 벽, 덮개
+    v.R(-45, 510, -40, BOXtop, null, '#E3EAF4'); v.R(40, 510, 45, BOXtop, null, '#E3EAF4');
+    v.R(-45, BOXtop, 45, CAPtop, null, '#E3EAF4');
+    // 안내판 (구멍 Ø10)
+    v.R(-40, 550, -5, 555, null, '#E3EAF4'); v.R(5, 550, 40, 555, null, '#E3EAF4');
+    // 위 자석 (아래 S)
+    v.R(-10, 607.5, 10, 610, null, 'var(--mag)'); v.R(-10, 605, 10, 607.5, null, 'var(--magS)');
+    // 막대, 받침, 막대 자석 (위 N)
+    v.R(-4, 480, 4, 565, null, '#BFE8D9');
+    v.R(-10, 565, 10, 570, null, '#E3EAF4');
+    v.R(-10, 570, 10, 572.5, null, 'var(--magS)'); v.R(-10, 572.5, 10, 575, null, 'var(--mag)');
+    // 멈춤 고리
+    v.R(-10, 518, 10, 528, null, '#9AA6B8');
+    // 열림 위치 (점선)
+    v.R(-10, 570 + 22, 10, 575 + 22, 'g'); v.R(-10, 518 + 22, 10, 528 + 22, 'g');
+    v.L(0, 475, 0, 625, 'c');
+    // 치수
+    v.dimV(575, 605, 22, '닫힘 간격 30', [10, 10], 'r');
+    v.dimV(597, 605, -22, '열림 8', [-10, -10]);
+    v.dimV(528, 550, -22, '행정 22', [-10, -5]);
+    v.dimV(510, 555, -60, '45', [-45, -40]);
+    v.dimV(510, BOXtop, 60, '벽 높이 100', [45, 45], 'r');
+    v.dimH(-45, 45, 630, '바깥 90 (벽 5T)', [CAPtop, CAPtop]);
+    v.dimH(-25, 25, 488, '뚜껑 구멍 Ø50', [500, 500]);
+    v.lead(8, 608, 75, 622, '위 자석 Ø20×5 (아래 S)', 'start');
+    v.lead(8, 573, 75, 585, '막대 자석 Ø20×5 (위 N)', 'start');
+    v.lead(30, 553, 75, 548, '안내판 5T (구멍 Ø10)', 'start');
+    v.lead(8, 523, 75, 528, '멈춤 고리 Ø20 10T', 'start');
+    v.lead(3, 492, 75, 494, '막대 Ø8', 'start');
+    v.T(-100, 505, '뚜껑 10T', { a: 'start', s: .85 });
+    v.T(-100, 563, '점선 = 열린 위치', { a: 'start', s: .85, c: 't' });
+  })();
+
+  // ---------- ⑤ 마개 막대 조립 ----------
+  (function () {
+    var v = V('vRod', -230, -110, 280, 640, 13);
+    v.L(-IW, 0, IW, 0); v.L(-IW, BOT, -20, BOT); v.L(20, BOT, IW, BOT);
+    v.R(-20, BOT, -16, BOT - 60, 'h'); v.R(16, BOT, 20, BOT - 60, 'h');
+    v.L(-IW, H, IW, H); v.L(-IW, LID, IW, LID);
+    v.R(-4, -50, 4, 565, null, '#BFE8D9');
+    v.P('M-20 -15 L20 -15 L16 10 L-16 10Z'.replace(/(-?\d+) (-?\d+)/g, function (m, a, b) { return a + ' ' + (-b); }), 'of', '#8A4B2A');
+    v.R(-12, 30, 12, 35, null, '#2A62C9');                 // 아래 턱
+    v.R(-12, 444, 12, 449, null, '#2A62C9');               // 위 턱
+    v.R(-10, 518, 10, 528, null, '#9AA6B8');               // 멈춤 고리
+    v.R(-10, 565, 10, 575, null, 'var(--mag)');            // 받침+자석
+    v.R(-40, 550, 40, 555, null, '#E3EAF4');               // 안내판
+    // 플로트 (물 50L 직전 위치 예시)
+    v.R(-100, 384, 100, 444, 'g'); v.T(0, 414, '플로트 Ø200 × 60', { s: .85 });
+    v.R(-6, 384, 6, 444, 'g');
+    v.L(-IW, Z50, IW, Z50, 'w'); v.L(-IW, Z75, IW, Z75, 'w');
+    v.T(-IW + 4, Z50 + 10, '50L 416', { a: 'start', c: 'tw', s: .85 });
+    v.T(-IW + 4, Z75 + 10, '7.5L 69', { a: 'start', c: 'tw', s: .85 });
+    v.L(0, -70, 0, 600, 'c');
+    var X = 60;
+    [[35, '아래 턱 윗면 35'], [444, '위 턱 아랫면 444'], [518, '멈춤 고리 518~528'], [565, '막대 끝 565']].forEach(function (p) {
+      v.L(14, p[0], X + 6, p[0], 'd'); v.T(X + 10, p[0], p[1], { a: 'start', c: 'td', s: .9 });
+    });
+    v.L(22, 0, X + 6, 0, 'd'); v.T(X + 10, 0, '안쪽 바닥 0', { a: 'start', c: 'td', s: .9 });
+    v.L(22, -50, X + 6, -50, 'd'); v.T(X + 10, -50, '막대 아래 끝 -50 (배수관 속 가이드)', { a: 'start', c: 'td', s: .9 });
+    v.L(22, 3, -60, 3, 'd'); v.T(-64, 8, '고무마개', { a: 'end', s: .85 });
+    v.T(-IW, H + 14, '뚜껑', { a: 'start', s: .8 });
+    v.dimV(-50, 565, -200, '막대 길이 615', [-4, -4]);
+  })();
+
+  // ---------- ⑥ U판 전개도 ----------
+  (function () {
+    var v = V('vBlank', -70, -120, 1370, 470, 26);
+    var S1 = 420, A = 133.5, F = 190, T = S1 * 2 + A * 2 + F;
+    v.R(0, 0, T, 350);
+    var b = [S1, S1 + A, S1 + A + F, S1 + 2 * A + F];
+    b.forEach(function (x) { v.L(x, -10, x, 360, 'g'); });
+    v.R(S1, 0, S1 + A, 350, null, 'rgba(42,98,201,.08)'); v.R(S1 + A + F, 0, S1 + 2 * A + F, 350, null, 'rgba(42,98,201,.08)');
+    v.T(S1 + A / 2, 175, '굽힘 R80', { s: .85 }); v.T(S1 + A + F + A / 2, 175, '굽힘 R80', { s: .85 });
+    var xd = S1 + A + F / 2 + 60;
+    v.C(xd, 175, 16, 'h'); v.L(S1 + A + F / 2, -20, S1 + A + F / 2, 370, 'c');
+    v.T(xd, 110, '배수 Ø32', { s: .8 }); v.T(xd, 80, '(굽힌 뒤 뚫기)', { s: .7 });
+    v.T(S1 / 2, 175, '왼쪽 벽', { s: .9 }); v.T(T - S1 / 2, 175, '오른쪽 벽', { s: .9 });
+    v.dimH(0, T, -70, '전개 길이 약 1297 (업체 확인)', [0, 0]);
+    v.dimH(0, S1, 410, '420', [350, 350]); v.dimH(S1, S1 + A, 410, '133.5', [350, 350]);
+    v.dimH(S1 + A, S1 + A + F, 410, '190', [350, 350]); v.dimH(S1 + A + F / 2, xd, 290, '60', [230, 200]);
+    v.dimV(0, 350, -35, '350', [0, 0]);
+  })();
+})();
+</script>
+</body>
+</html>
